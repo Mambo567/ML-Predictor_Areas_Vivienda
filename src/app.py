@@ -105,12 +105,21 @@ prop_3_bathrooms = bathrooms_prop["prop_3_bathrooms"]
 
 # Función para realizar predicciones
 def make_prediction(total_area, n_bedrooms, n_bathrooms, n_toilets, laundry, hall):
-    input_bedrooms = scaler_bedrooms.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms, n_toilets, laundry, hall]]))
-    input_bathrooms = scaler_bathrooms.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms]]))
-    input_livingroom = scaler_livingroom.transform(pd.DataFrame([[total_area, n_bedrooms, n_toilets, laundry, hall]]))
-    input_kitchen = scaler_kitchen.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms, laundry]]))
-    input_toilet = scaler_toilet.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms, laundry, hall]]))
+    # Listado de columnas de cada target
+    columns_bedrooms = ['A_TOTAL_(m2)', 'N_HABITACIONES', 'N_BAÑOS', 'N_ASEOS', 'TIENE_LAVADERO', 'TIENE_ENTRADA']
+    columns_bathrooms = ['A_TOTAL_(m2)', 'N_HABITACIONES', 'N_BAÑOS']
+    columns_livingroom = ['A_TOTAL_(m2)', 'N_HABITACIONES', 'N_ASEOS', 'TIENE_LAVADERO', 'TIENE_ENTRADA']
+    columns_kitchen = ['A_TOTAL_(m2)', 'N_HABITACIONES', 'N_BAÑOS', 'TIENE_LAVADERO']
+    columns_toilet = ['A_TOTAL_(m2)', 'N_HABITACIONES', 'N_BAÑOS', 'TIENE_LAVADERO', 'TIENE_ENTRADA']
+
+    # Generación de Inputs
+    input_bedrooms = scaler_bedrooms.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms, n_toilets, laundry, hall]],columns=columns_bedrooms))
+    input_bathrooms = scaler_bathrooms.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms]],columns=columns_bathrooms))
+    input_livingroom = scaler_livingroom.transform(pd.DataFrame([[total_area, n_bedrooms, n_toilets, laundry, hall]],columns=columns_livingroom))
+    input_kitchen = scaler_kitchen.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms, laundry]],columns=columns_kitchen))
+    input_toilet = scaler_toilet.transform(pd.DataFrame([[total_area, n_bedrooms, n_bathrooms, laundry, hall]],columns=columns_toilet))
     
+    # Generación de Predicciones 
     pred_bedrooms = round(linear_model_bedrooms.predict(input_bedrooms)[0][0], 2)
     pred_bathrooms = round(linear_model_bathrooms.predict(input_bathrooms)[0][0], 2)
     pred_livingroom = round(linear_model_livingroom.predict(input_livingroom)[0][0], 2)
@@ -127,7 +136,7 @@ col1, col2 = st.columns([1, 2])  # Ajusta el ancho relativo de las columnas
 with col2:
     st.title("Home Spaces Forecaster")
     st.subheader("Predicción profesional de espacios habitacionales.")
-    st.write("¿Cúanto miden las diferentes áreas de tu casa? Introduce los datos y haremos las mediciones.")
+    st.write("¿Necesitas una proyección del tamaño de las diferentes áreas de una casa? Introduce los datos y haremos las mediciones.")
 
 with col1:
     st.image("./imagenes/arquitecto.png", caption="A retos exigentes, soluciones inteligentes.",width=400)
