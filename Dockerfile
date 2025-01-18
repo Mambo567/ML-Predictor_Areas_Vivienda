@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación Streamlit
-CMD ["streamlit", "run", "app.py", "--server.port=$PORT", "--server.enableCORS=false"]
+CMD ["streamlit", "run", "app.py", "--server.port=${PORT:-8080}", "--server.enableCORS=false"]
 
 
 
